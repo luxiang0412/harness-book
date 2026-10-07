@@ -96,4 +96,4 @@ npm run dev        # http://localhost:5173/harness-book/
 
 本书的文字、图和 mini-harness 代码以 [CC0 1.0](LICENSE) 发布，作者放弃全部版权，任何人可以自由复制、修改、分发和商用，不需要署名。
 
-例外：书中引用的 pi 源码和文档片段，版权归 pi 的作者所有，以 [MIT 许可证](https://github.com/earendil-works/pi/blob/main/LICENSE) 发布。
+例外：书中引用的 pi 源码和文档片段，版权归 pi 的作者所有，以 [MIT 许可证](https://github.com/earendil-works/pi/blob/main/LICENSE) 发布 (见 [NOTICE](NOTICE))。
