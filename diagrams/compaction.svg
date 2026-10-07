@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 360" width="800" height="360" font-family="Noto Sans CJK SC, PingFang SC, Microsoft YaHei, sans-serif">
+  <style>
+    .cell { stroke: #5b6b7f; stroke-width: 1.2; }
+    .u { fill: #e8f1fb; } .a { fill: #eaf6ec; } .t { fill: #f3ecfb; } .s { fill: #fff7e6; } .c { fill: #fde2e2; } .sys { fill: #eeeeee; }
+    .lbl { font-size: 12px; text-anchor: middle; fill: #1f2328; }
+    .h { font-size: 15px; font-weight: bold; fill: #1f2328; }
+    .n { font-size: 12.5px; fill: #3d4651; }
+    .dim { opacity: 0.35; }
+  </style>
+
+  <text x="20" y="28" class="h">压缩前：会话文件里的 entry</text>
+  <g transform="translate(20,40)">
+    <rect x="0" width="62" height="34" class="cell u"/><text x="31" y="22" class="lbl">user</text>
+    <rect x="66" width="62" height="34" class="cell a"/><text x="97" y="22" class="lbl">asst</text>
+    <rect x="132" width="62" height="34" class="cell t"/><text x="163" y="22" class="lbl">tool</text>
+    <rect x="198" width="62" height="34" class="cell a"/><text x="229" y="22" class="lbl">asst</text>
+    <rect x="264" width="62" height="34" class="cell u"/><text x="295" y="22" class="lbl">user</text>
+    <rect x="330" width="62" height="34" class="cell a"/><text x="361" y="22" class="lbl">asst</text>
+    <rect x="396" width="62" height="34" class="cell t"/><text x="427" y="22" class="lbl">tool</text>
+    <rect x="462" width="62" height="34" class="cell t"/><text x="493" y="22" class="lbl">tool</text>
+    <rect x="528" width="62" height="34" class="cell a"/><text x="559" y="22" class="lbl">asst</text>
+    <rect x="594" width="62" height="34" class="cell t"/><text x="625" y="22" class="lbl">tool</text>
+    <path d="M0 44 L258 44" stroke="#c08a2b" stroke-width="2"/>
+    <text x="129" y="62" class="lbl">要摘要的部分</text>
+    <path d="M264 44 L656 44" stroke="#2f7d32" stroke-width="2"/>
+    <text x="460" y="62" class="lbl">保留的最近 ~20k token</text>
+    <path d="M264 -6 L264 -16 M264 -16 L300 -16" stroke="#d1242f" stroke-width="1.5" fill="none"/>
+    <text x="304" y="-12" class="n" fill="#d1242f">firstKeptEntryId (切点只能落在 user / assistant 上)</text>
+  </g>
+
+  <text x="20" y="150" class="h">压缩后：只追加一条 compaction entry，旧 entry 原样保留</text>
+  <g transform="translate(20,162)">
+    <g class="dim">
+      <rect x="0" width="62" height="34" class="cell u"/><text x="31" y="22" class="lbl">user</text>
+      <rect x="66" width="62" height="34" class="cell a"/><text x="97" y="22" class="lbl">asst</text>
+      <rect x="132" width="62" height="34" class="cell t"/><text x="163" y="22" class="lbl">tool</text>
+      <rect x="198" width="62" height="34" class="cell a"/><text x="229" y="22" class="lbl">asst</text>
+    </g>
+    <rect x="264" width="62" height="34" class="cell u"/><text x="295" y="22" class="lbl">user</text>
+    <rect x="330" width="62" height="34" class="cell a"/><text x="361" y="22" class="lbl">asst</text>
+    <rect x="396" width="62" height="34" class="cell t"/><text x="427" y="22" class="lbl">tool</text>
+    <rect x="462" width="62" height="34" class="cell t"/><text x="493" y="22" class="lbl">tool</text>
+    <rect x="528" width="62" height="34" class="cell a"/><text x="559" y="22" class="lbl">asst</text>
+    <rect x="594" width="62" height="34" class="cell t"/><text x="625" y="22" class="lbl">tool</text>
+    <rect x="660" width="80" height="34" class="cell c"/><text x="700" y="22" class="lbl">compaction</text>
+    <text x="0" y="56" class="n">灰色：仍在文件里，但不再发给模型</text>
+  </g>
+
+  <text x="20" y="262" class="h">模型看到的上下文</text>
+  <g transform="translate(20,274)">
+    <rect x="0" width="62" height="34" class="cell sys"/><text x="31" y="22" class="lbl">system</text>
+    <rect x="66" width="80" height="34" class="cell s"/><text x="106" y="22" class="lbl">摘要</text>
+    <rect x="150" width="62" height="34" class="cell u"/><text x="181" y="22" class="lbl">user</text>
+    <rect x="216" width="62" height="34" class="cell a"/><text x="247" y="22" class="lbl">asst</text>
+    <rect x="282" width="62" height="34" class="cell t"/><text x="313" y="22" class="lbl">tool</text>
+    <rect x="348" width="62" height="34" class="cell t"/><text x="379" y="22" class="lbl">tool</text>
+    <rect x="414" width="62" height="34" class="cell a"/><text x="445" y="22" class="lbl">asst</text>
+    <rect x="480" width="62" height="34" class="cell t"/><text x="511" y="22" class="lbl">tool</text>
+    <text x="0" y="60" class="n">摘要以 user 消息的形式出现：“之前的对话被压缩成了下面的摘要：&lt;summary&gt;…&lt;/summary&gt;”</text>
+  </g>
+</svg>

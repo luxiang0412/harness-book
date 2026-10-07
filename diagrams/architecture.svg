@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500" font-family="Noto Sans CJK SC, PingFang SC, Microsoft YaHei, sans-serif">
+  <style>
+    .layer { stroke: #5b6b7f; stroke-width: 1.5; rx: 8; }
+    .title { font-size: 17px; font-weight: bold; fill: #1f2328; }
+    .desc { font-size: 13px; fill: #3d4651; }
+    .small { font-size: 12px; fill: #3d4651; }
+    .side { fill: #fff7e6; stroke: #c08a2b; stroke-width: 1.5; rx: 6; }
+    .arrow { stroke: #5b6b7f; stroke-width: 1.5; fill: none; marker-end: url(#head); }
+  </style>
+  <defs>
+    <marker id="head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#5b6b7f"/>
+    </marker>
+  </defs>
+
+  <text x="20" y="30" class="title">pi 的分层结构 (左) 与可选的高级组件 (右)</text>
+
+  <!-- 界面层 -->
+  <rect x="20" y="50" width="520" height="80" class="layer" fill="#e8f1fb"/>
+  <text x="36" y="76" class="title">运行模式 / 界面</text>
+  <rect x="36" y="88" width="110" height="30" rx="5" fill="#fff" stroke="#8aa4c4"/>
+  <text x="50" y="108" class="small">交互 (pi-tui)</text>
+  <rect x="156" y="88" width="110" height="30" rx="5" fill="#fff" stroke="#8aa4c4"/>
+  <text x="168" y="108" class="small">print / json</text>
+  <rect x="276" y="88" width="110" height="30" rx="5" fill="#fff" stroke="#8aa4c4"/>
+  <text x="306" y="108" class="small">RPC</text>
+  <rect x="396" y="88" width="130" height="30" rx="5" fill="#fff" stroke="#8aa4c4"/>
+  <text x="418" y="108" class="small">SDK (进程内)</text>
+
+  <path d="M280 130 L280 152" class="arrow"/>
+
+  <!-- coding-agent -->
+  <rect x="20" y="155" width="520" height="130" class="layer" fill="#eaf6ec"/>
+  <text x="36" y="181" class="title">pi-coding-agent：AgentSession</text>
+  <text x="36" y="205" class="desc">工具 (read / bash / edit / write)　会话树 (JSONL)　上下文压缩</text>
+  <text x="36" y="228" class="desc">system prompt 拼装　AGENTS.md / skills / 模板　扩展系统</text>
+  <text x="36" y="251" class="desc">项目信任　模型选择与凭据　重试与溢出恢复</text>
+  <text x="36" y="274" class="small">packages/coding-agent/src/core　→　mini-harness 的 session/、tools/、context/ 等</text>
+
+  <path d="M280 285 L280 307" class="arrow"/>
+
+  <!-- agent core -->
+  <rect x="20" y="310" width="520" height="70" class="layer" fill="#f3ecfb"/>
+  <text x="36" y="336" class="title">pi-agent-core：agent loop + Agent</text>
+  <text x="36" y="360" class="small">packages/agent/src (约 2500 行)　→　mini-harness: agent/</text>
+
+  <path d="M280 380 L280 402" class="arrow"/>
+
+  <!-- ai -->
+  <rect x="20" y="405" width="520" height="75" class="layer" fill="#fdeeee"/>
+  <text x="36" y="431" class="title">pi-ai：统一的多 provider LLM 接口</text>
+  <text x="36" y="455" class="small">消息模型、流式事件、Anthropic / OpenAI / Google … 适配器、模型目录</text>
+  <text x="36" y="472" class="small">packages/ai/src　→　mini-harness: ai/</text>
+
+  <!-- side components -->
+  <rect x="570" y="50" width="210" height="430" rx="8" fill="#fffbf2" stroke="#c08a2b" stroke-dasharray="5 4"/>
+  <text x="586" y="76" class="title">高级组件</text>
+  <rect x="586" y="90" width="178" height="44" class="side"/>
+  <text x="598" y="110" class="small">pi-mcp</text>
+  <text x="598" y="126" class="small">接入外部工具服务器 (12 章)</text>
+  <rect x="586" y="144" width="178" height="44" class="side"/>
+  <text x="598" y="164" class="small">pi-codemode</text>
+  <text x="598" y="180" class="small">脚本调用工具 (17 章)</text>
+  <rect x="586" y="198" width="178" height="44" class="side"/>
+  <text x="598" y="218" class="small">pi-durable</text>
+  <text x="598" y="234" class="small">崩溃可恢复的 harness (16 章)</text>
+  <rect x="586" y="252" width="178" height="60" class="side"/>
+  <text x="598" y="272" class="small">protocol / server / client</text>
+  <text x="598" y="288" class="small">chord (服务与复制状态)</text>
+  <text x="598" y="304" class="small">进程拆分 (15 章)</text>
+  <rect x="586" y="322" width="178" height="44" class="side"/>
+  <text x="598" y="342" class="small">pi-env</text>
+  <text x="598" y="358" class="small">远程执行环境 (15 章)</text>
+  <rect x="586" y="376" width="178" height="44" class="side"/>
+  <text x="598" y="396" class="small">evals / faux provider</text>
+  <text x="598" y="412" class="small">测试与评估 (18 章)</text>
+  <rect x="586" y="430" width="178" height="40" class="side"/>
+  <text x="598" y="455" class="small">pi-telemetry (可观测性)</text>
+</svg>

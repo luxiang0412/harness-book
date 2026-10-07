@@ -1,0 +1,217 @@
+/* 《从零构建 Agent Harness》排版样式。屏幕阅读和打印 (PDF) 共用。 */
+
+@page {
+	size: A4;
+	margin: 18mm 16mm 20mm 16mm;
+}
+
+:root {
+	--text: #1f2328;
+	--muted: #59636e;
+	--accent: #0b5cad;
+	--border: #d0d7de;
+	--code-bg: #f6f8fa;
+	--note-bg: #eef6ff;
+}
+
+html {
+	font-size: 10.5pt;
+}
+
+body {
+	font-family: "Noto Sans CJK SC", "Noto Sans CJK JP", "PingFang SC", "Microsoft YaHei", sans-serif;
+	color: var(--text);
+	line-height: 1.75;
+	max-width: 46em;
+	margin: 0 auto;
+	padding: 2em 1em;
+	background: #fff;
+}
+
+h1,
+h2,
+h3,
+h4 {
+	font-family: "Noto Serif CJK SC", "Noto Sans CJK SC", serif;
+	line-height: 1.35;
+	margin: 1.6em 0 0.6em;
+	break-after: avoid;
+}
+
+h1 {
+	font-size: 2em;
+	border-bottom: 2px solid var(--accent);
+	padding-bottom: 0.3em;
+	break-before: page;
+}
+
+h1:first-of-type {
+	break-before: auto;
+}
+
+h2 {
+	font-size: 1.45em;
+	border-bottom: 1px solid var(--border);
+	padding-bottom: 0.2em;
+}
+
+h3 {
+	font-size: 1.2em;
+}
+
+a {
+	color: var(--accent);
+	text-decoration: none;
+}
+
+p,
+li {
+	text-align: justify;
+}
+
+code {
+	font-family: "Noto Sans Mono", "DejaVu Sans Mono", "Noto Sans CJK SC", monospace;
+	font-size: 0.88em;
+	background: var(--code-bg);
+	padding: 0.1em 0.3em;
+	border-radius: 3px;
+}
+
+pre {
+	background: var(--code-bg);
+	border: 1px solid var(--border);
+	border-radius: 6px;
+	padding: 0.8em 1em;
+	overflow-x: auto;
+	line-height: 1.5;
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+pre code {
+	background: none;
+	padding: 0;
+	font-size: 0.82em;
+}
+
+blockquote {
+	margin: 1em 0;
+	padding: 0.6em 1em;
+	border-left: 4px solid var(--accent);
+	background: var(--note-bg);
+	color: var(--text);
+}
+
+blockquote p {
+	margin: 0.3em 0;
+}
+
+table {
+	border-collapse: collapse;
+	margin: 1em 0;
+	width: 100%;
+	font-size: 0.92em;
+}
+
+tr {
+	break-inside: avoid;
+}
+
+th,
+td {
+	border: 1px solid var(--border);
+	padding: 0.4em 0.6em;
+	vertical-align: top;
+	text-align: left;
+}
+
+th {
+	background: var(--code-bg);
+}
+
+img {
+	display: block;
+	max-width: 100%;
+	margin: 1em auto;
+	break-inside: avoid;
+}
+
+figure {
+	margin: 1.2em 0;
+	break-inside: avoid;
+}
+
+figcaption,
+.caption {
+	text-align: center;
+	color: var(--muted);
+	font-size: 0.9em;
+}
+
+div.mermaid {
+	text-align: center;
+	margin: 1.2em 0;
+	break-inside: avoid;
+}
+
+/* 目录 */
+nav#TOC {
+	break-after: page;
+}
+
+nav#TOC ul {
+	list-style: none;
+	padding-left: 1.2em;
+}
+
+nav#TOC > ul {
+	padding-left: 0;
+}
+
+nav#TOC > ul > li {
+	margin-top: 0.4em;
+	font-weight: bold;
+}
+
+nav#TOC > ul > li li {
+	font-weight: normal;
+}
+
+header#title-block-header {
+	text-align: center;
+	padding: 30vh 0 10vh;
+	break-after: page;
+}
+
+header#title-block-header .title {
+	border: none;
+	font-size: 2.4em;
+}
+
+header#title-block-header .subtitle {
+	color: var(--muted);
+	font-size: 1.2em;
+	text-align: center;
+}
+
+@media print {
+	body {
+		max-width: none;
+		padding: 0;
+	}
+
+	blockquote {
+		break-inside: avoid;
+	}
+}
+
+/* 超高的图缩小到一页以内，保持比例 */
+div.mermaid svg {
+	max-height: 225mm;
+}
+
+/* 覆盖 pandoc 默认的打印样式：它给每行代码加了 5em 的悬挂缩进 */
+pre > code.sourceCode > span {
+	text-indent: 0 !important;
+	padding-left: 0 !important;
+}

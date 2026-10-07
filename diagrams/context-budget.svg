@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 252" width="800" height="252" font-family="Noto Sans CJK SC, PingFang SC, Microsoft YaHei, sans-serif">
+  <style>
+    .h { font-size: 15px; font-weight: bold; fill: #1f2328; }
+    .n { font-size: 12.5px; fill: #1f2328; text-anchor: middle; }
+    .m { font-size: 12px; fill: #3d4651; }
+  </style>
+  <text x="20" y="28" class="h">一次请求的上下文窗口 (例：200k token)</text>
+  <g transform="translate(20,48)">
+    <rect x="0" width="70" height="56" fill="#eeeeee" stroke="#5b6b7f"/>
+    <text x="35" y="25" class="n">system</text><text x="35" y="43" class="n">~3k</text>
+    <rect x="70" width="60" height="56" fill="#e3e9f4" stroke="#5b6b7f"/>
+    <text x="100" y="25" class="n">工具</text><text x="100" y="43" class="n">~2k</text>
+    <rect x="130" width="460" height="56" fill="#eaf6ec" stroke="#5b6b7f"/>
+    <text x="360" y="25" class="n">对话历史 (user / assistant / 工具结果)</text>
+    <text x="360" y="43" class="n">随每一轮增长，工具结果通常是大头</text>
+    <rect x="590" width="70" height="56" fill="#fde2e2" stroke="#5b6b7f" stroke-dasharray="4 3"/>
+    <text x="625" y="25" class="n">预留</text><text x="625" y="43" class="n">16k</text>
+    <rect x="660" width="80" height="56" fill="#fff" stroke="#5b6b7f" stroke-dasharray="4 3"/>
+    <text x="700" y="33" class="n">空闲</text>
+  </g>
+  <path d="M20 120 L780 120" stroke="#5b6b7f"/>
+  <text x="20" y="145" class="m">· 每次请求都要把整个窗口内容重新发送一次：历史越长，每一轮越贵、越慢。</text>
+  <text x="20" y="167" class="m">· 预留 (reserveTokens) 留给模型的回复；历史 + 预留超过窗口时触发压缩。</text>
+  <text x="20" y="189" class="m">· prompt cache 让未变化的前缀 (system、工具、早期历史) 以折扣价复用 (Anthropic 约为原价 1/10)，</text>
+  <text x="20" y="211" class="m">  前提是前缀一个字节都没变。</text>
+  <text x="20" y="233" class="m">· 所以：不要随意改动开头的内容；新信息尽量追加在末尾。</text>
+</svg>

@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 330" width="800" height="330" font-family="Noto Sans CJK SC, PingFang SC, Microsoft YaHei, sans-serif">
+  <style>
+    .node { stroke: #5b6b7f; stroke-width: 1.5; }
+    .user { fill: #e8f1fb; }
+    .asst { fill: #eaf6ec; }
+    .tool { fill: #f3ecfb; }
+    .sum { fill: #fff7e6; stroke: #c08a2b; }
+    .label { font-size: 13px; fill: #1f2328; text-anchor: middle; }
+    .note { font-size: 12.5px; fill: #3d4651; }
+    .edge { stroke: #5b6b7f; stroke-width: 1.5; fill: none; marker-end: url(#a); }
+    .active { stroke: #d1242f; stroke-width: 3; }
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#5b6b7f"/></marker>
+  </defs>
+
+  <text x="20" y="28" font-size="16" font-weight="bold" fill="#1f2328">会话树：每个 entry 用 parentId 指向父节点，leaf 是当前位置</text>
+
+  <!-- main line -->
+  <rect x="20" y="120" width="80" height="40" rx="6" class="node user active"/>
+  <text x="60" y="145" class="label">u1 用户</text>
+  <path d="M100 140 L128 140" class="edge"/>
+  <rect x="130" y="120" width="80" height="40" rx="6" class="node asst active"/>
+  <text x="170" y="145" class="label">a1 助手</text>
+  <path d="M210 140 L238 140" class="edge"/>
+  <rect x="240" y="120" width="80" height="40" rx="6" class="node tool active"/>
+  <text x="280" y="145" class="label">t1 工具</text>
+  <path d="M320 140 L348 140" class="edge"/>
+  <rect x="350" y="120" width="80" height="40" rx="6" class="node asst active"/>
+  <text x="390" y="145" class="label">a2 助手</text>
+
+  <!-- branch A (abandoned) -->
+  <path d="M430 140 C 450 140, 450 80, 470 80" class="edge"/>
+  <rect x="472" y="60" width="80" height="40" rx="6" class="node user"/>
+  <text x="512" y="85" class="label">u2 用户</text>
+  <path d="M552 80 L580 80" class="edge"/>
+  <rect x="582" y="60" width="80" height="40" rx="6" class="node asst"/>
+  <text x="622" y="85" class="label">a3 助手</text>
+  <text x="680" y="85" class="note">← 旧分支，仍保留</text>
+
+  <!-- branch B (active) -->
+  <path d="M430 140 C 450 140, 450 200, 470 200" class="edge active"/>
+  <rect x="472" y="180" width="80" height="40" rx="6" class="node sum active"/>
+  <text x="512" y="205" class="label">分支摘要</text>
+  <path d="M552 200 L580 200" class="edge"/>
+  <rect x="582" y="180" width="80" height="40" rx="6" class="node user active"/>
+  <text x="622" y="205" class="label">u3 用户</text>
+  <text x="680" y="197" class="note" fill="#d1242f">← leaf</text>
+  <text x="680" y="214" class="note">(当前位置)</text>
+
+  <text x="20" y="262" class="note">红框：从 leaf 沿 parentId 回溯到根得到的路径 = 发给模型的历史。</text>
+  <text x="20" y="284" class="note">切换分支只是移动 leaf 指针；离开的分支 (u2, a3) 一行都不删除。</text>
+  <text x="20" y="306" class="note">分支摘要把旧分支"做过什么"带到新分支，模型不会重复已经试过的方案。</text>
+</svg>

@@ -1,0 +1,18 @@
+{
+	"name": "harness-book",
+	"private": true,
+	"type": "module",
+	"description": "从零构建 Agent Harness：以 pi 为蓝本",
+	"scripts": {
+		"dev": "vitepress dev",
+		"build": "vitepress build",
+		"preview": "vitepress preview",
+		"pdf": "./build/build.sh",
+		"test": "cd mini-harness && node --test test/*.test.ts"
+	},
+	"devDependencies": {
+		"mermaid": "11.17.2",
+		"vitepress": "1.6.4",
+		"vitepress-plugin-mermaid": "2.0.17"
+	}
+}
