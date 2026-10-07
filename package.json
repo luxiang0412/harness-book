@@ -14,5 +14,6 @@
 		"mermaid": "11.17.2",
 		"vitepress": "1.6.4",
 		"vitepress-plugin-mermaid": "2.0.17"
-	}
+	},
+	"license": "CC0-1.0"
 }

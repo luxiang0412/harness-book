@@ -13,5 +13,6 @@
 	"scripts": {
 		"start": "node src/main.ts",
 		"test": "node --test test/*.test.ts"
-	}
+	},
+	"license": "CC0-1.0"
 }

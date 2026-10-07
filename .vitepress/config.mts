@@ -96,7 +96,7 @@ export default withMermaid({
 		darkModeSwitchLabel: "深色模式",
 		footer: {
 			message: "书中引用的 pi 源码版权归其作者所有，以 MIT 许可证发布：github.com/earendil-works/pi",
-			copyright: "© 2026 luxiang0412",
+			copyright: "本书内容与代码以 CC0 1.0 发布 (公共领域)",
 		},
 	},
 	mermaid: {

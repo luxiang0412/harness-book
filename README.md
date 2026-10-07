@@ -91,3 +91,9 @@ npm run dev        # http://localhost:5173/harness-book/
 - pi 的源码路径都相对于 pi 仓库根目录，例如 `packages/agent/src/agent-loop.ts`。
 - 书中引用的 pi 代码有删节，以说明设计为目的；完整代码以仓库为准。
 - pi 的部分包 (durable、server、client、protocol) 标注为实验性，相关章节关注设计思路，API 可能变化。
+
+## 许可证
+
+本书的文字、图和 mini-harness 代码以 [CC0 1.0](LICENSE) 发布，作者放弃全部版权，任何人可以自由复制、修改、分发和商用，不需要署名。
+
+例外：书中引用的 pi 源码和文档片段，版权归 pi 的作者所有，以 [MIT 许可证](https://github.com/earendil-works/pi/blob/main/LICENSE) 发布。
