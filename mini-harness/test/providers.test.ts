@@ -8,6 +8,7 @@ import assert from "node:assert/strict";
 import { createServer, type IncomingMessage, type Server } from "node:http";
 import type { AddressInfo } from "node:net";
 import { after, before, test } from "node:test";
+import { parseToolArguments } from "../src/ai/sse.ts";
 import { stream } from "../src/ai/stream.ts";
 import type { AssistantMessageEvent, Model } from "../src/ai/types.ts";
 
@@ -135,6 +136,16 @@ test("openai adapter: tool call fragments are reassembled by index", async () =>
 	assert.equal(message.usage.input, 30);
 	assert.equal(lastBody.messages[2].role, "tool");
 	assert.equal(lastBody.messages[2].tool_call_id, "c0");
+});
+
+test("finished tool call arguments that are not a JSON object set argumentsError", () => {
+	assert.deepEqual(parseToolArguments('{"path":"a.txt"}'), { arguments: { path: "a.txt" } });
+	assert.deepEqual(parseToolArguments(""), { arguments: {} });
+	for (const text of ['{"path":"a.t', "[1,2]", "null"]) {
+		const parsed = parseToolArguments(text);
+		assert.deepEqual(parsed.arguments, {});
+		assert.ok(parsed.argumentsError?.endsWith(`Received arguments:\n${text}`));
+	}
 });
 
 test("orphaned tool calls get a synthetic result before sending", async () => {

@@ -10,7 +10,8 @@
  *    (例如执行到一半被用户中断)。所有主流 API 都要求每个 tool call 都有结果，
  *    所以补一条 "No result provided" 的错误结果。
  * 3. 跨模型回放：thinking 的签名只对产生它的模型有效。
- *    换了模型就把 thinking 转成普通文本，否则 API 会拒绝。
+ *    换了模型就丢弃 thinking：签名会被 API 拒绝，转成普通文本又会让新模型
+ *    把旧模型的推理当成自己回答的一部分。
  */
 
 import type { AssistantMessage, Message, Model, ToolCall, ToolResultMessage } from "./types.ts";
@@ -62,10 +63,6 @@ function convertForModel(message: AssistantMessage, model: Model): AssistantMess
 	if (sameModel) return message;
 	return {
 		...message,
-		content: message.content.flatMap((block) => {
-			if (block.type !== "thinking") return [block];
-			if (!block.thinking.trim()) return [];
-			return [{ type: "text" as const, text: block.thinking }];
-		}),
+		content: message.content.filter((block) => block.type !== "thinking"),
 	};
 }

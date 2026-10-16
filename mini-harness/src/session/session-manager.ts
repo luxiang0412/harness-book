@@ -103,7 +103,12 @@ export class SessionManager {
 		this.file = file;
 	}
 
-	static create(cwd: string, sessionDir: string | undefined = defaultSessionDir(cwd)): SessionManager {
+	/**
+	 * sessionDir 为 undefined 时只在内存里。注意这里不能写成默认参数
+	 * (`sessionDir = defaultSessionDir(cwd)`)：显式传入的 undefined 也会触发默认值，
+	 * 内存会话就会悄悄写进 ~/.mini。
+	 */
+	static create(cwd: string, sessionDir: string | undefined): SessionManager {
 		const id = randomUUID();
 		const timestamp = new Date().toISOString();
 		let file: string | undefined;

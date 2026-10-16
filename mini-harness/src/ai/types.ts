@@ -32,6 +32,11 @@ export interface ToolCall {
 	id: string;
 	name: string;
 	arguments: Record<string, unknown>;
+	/**
+	 * 模型发来的完整参数文本不是合法的 JSON 对象时设置，此时 arguments 是 {}。
+	 * 里面带着原始文本，参数校验会把它作为错误结果交还给模型，工具不会执行。
+	 */
+	argumentsError?: string;
 }
 
 // ---------- 消息 ----------

@@ -5,13 +5,13 @@
  * 多个客户端可以 attach 到同一个会话：一个发 prompt，所有客户端都收到事件。
  * 客户端断开，会话继续运行。
  *
- * 对应 pi 的 packages/protocol (帧格式)、packages/server (路由、attach)、packages/client。
- * pi 用 CBOR 编码、带版本握手和 serverId 校验；这里用 JSON，只保留结构。
+ * 对应 pi 的 packages/chord (host、link、引用、复制状态) 和 packages/env (长度前缀帧)。
+ * chord 在 hello 里交换协议版本，按合约路由，身份由接受连接的一方盖章；这里只保留结构。
  *
  *   node examples/ch15-session-server.ts      # 在同一个进程里启动服务器和两个客户端，演示完整流程
  *
  * 帧格式：4 字节大端长度 + JSON。
- * 为什么不用换行分隔？长度前缀不需要转义，也不需要扫描内容找分隔符，二进制数据 (pi 的 CBOR) 也能直接传。
+ * 为什么不用换行分隔？长度前缀不需要转义，也不需要扫描内容找分隔符，二进制数据 (比如 pi-env 帧里的文件内容) 也能直接传。
  */
 
 import { randomUUID } from "node:crypto";

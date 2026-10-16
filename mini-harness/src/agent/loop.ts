@@ -305,6 +305,9 @@ async function prepareToolCall(
 ): Promise<Prepared> {
 	const tool = context.tools.find((candidate) => candidate.name === toolCall.name);
 	if (!tool) return immediate(toolCall, `Tool ${toolCall.name} not found`);
+	if (toolCall.argumentsError) {
+		return immediate(toolCall, `Invalid arguments for ${toolCall.name}: ${toolCall.argumentsError}`);
+	}
 
 	const errors = validateArguments(tool.parameters, toolCall.arguments);
 	if (errors.length > 0) {

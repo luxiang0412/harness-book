@@ -120,7 +120,8 @@ async function main(): Promise<void> {
 	let sessionManager: SessionManager;
 	if (args.resume) sessionManager = SessionManager.open(args.resume);
 	else if (args.continueSession && SessionManager.list(sessionDir)[0]) sessionManager = SessionManager.open(SessionManager.list(sessionDir)[0].file);
-	else sessionManager = SessionManager.create(cwd, args.noSession ? undefined : sessionDir);
+	else if (args.noSession) sessionManager = SessionManager.inMemory(cwd);
+	else sessionManager = SessionManager.create(cwd, sessionDir);
 
 	// 5. 工具：内置 + MCP (第 12 章) + code mode (第 17 章)
 	const tools = args.noTools ? [] : createCodingTools(cwd);

@@ -9,7 +9,7 @@ Node.js 22.18 或更新版本。Node 直接运行 `.ts` 文件，不需要编译
 ## 快速开始
 
 ```bash
-node --test test/*.test.ts              # 31 个测试，离线运行
+node --test test/*.test.ts              # 34 个测试，离线运行
 node src/main.ts --demo                 # 假模型，体验交互界面
 ```
 

@@ -69,6 +69,15 @@ test("session tree: branch and rebuild context", () => {
 	assert.equal(session.getTree()[0].children.length, 2);
 });
 
+test("in-memory sessions write no file (--no-session)", async () => {
+	const dir = tmp();
+	const session = SessionManager.inMemory(dir);
+	const agentSession = new AgentSession({ cwd: dir, model: createFauxModel(["hi"]).model, sessionManager: session, tools: [] });
+	await agentSession.prompt("hello");
+	assert.equal(session.file, undefined);
+	assert.equal(session.buildContext().messages.length, 2);
+});
+
 test("session file round trip", async () => {
 	const dir = tmp();
 	const faux = createFauxModel(["hello back"]);

@@ -62,6 +62,19 @@ test("invalid arguments come back to the model as an error result", async () => 
 	assert.match(JSON.stringify(result), /arguments.text: required/);
 });
 
+test("malformed tool call arguments are reported, not executed as {}", async () => {
+	let executed = false;
+	const tool: AgentTool = { ...echoTool, parameters: { type: "object", properties: {} }, execute: async () => ((executed = true), { content: [] }) };
+	const call = { ...toolCall("echo", {}), argumentsError: 'Unexpected end of JSON input\n\nReceived arguments:\n{"text":"hi' };
+	const faux = createFauxModel([[call], "sorry"]);
+	const agent = new Agent({ model: faux.model, tools: [tool] });
+	await agent.prompt("go");
+	const result = agent.state.messages[2];
+	assert.equal(executed, false);
+	assert.equal(result.role === "toolResult" && result.isError, true);
+	assert.match(JSON.stringify(result), /Received arguments/);
+});
+
 test("beforeToolCall can block execution", async () => {
 	let executed = false;
 	const tool: AgentTool = { ...echoTool, execute: async () => ((executed = true), { content: [] }) };

@@ -136,7 +136,7 @@ async function consumeChunks(
 			stream.push({ type: "thinking_end", contentIndex, content: block.thinking, partial: output });
 		} else {
 			const call = block as StreamingToolCall;
-			call.arguments = parseToolArguments(call.partialJson);
+			Object.assign(call, parseToolArguments(call.partialJson));
 			const { partialJson: _partialJson, ...finalCall } = call;
 			output.content[contentIndex] = finalCall;
 			stream.push({ type: "toolcall_end", contentIndex, toolCall: finalCall, partial: output });

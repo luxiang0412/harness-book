@@ -208,7 +208,7 @@ async function consumeEvents(
 					stream.push({ type: "thinking_end", contentIndex, content: block.thinking, partial: output });
 				} else {
 					const call = block as StreamingToolCall;
-					call.arguments = parseToolArguments(call.partialJson);
+					Object.assign(call, parseToolArguments(call.partialJson));
 					// partialJson 只是流式缓冲区，不能进入会话历史。
 					const { partialJson: _partialJson, ...finalCall } = call;
 					output.content[contentIndex] = finalCall;
