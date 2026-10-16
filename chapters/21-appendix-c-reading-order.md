@@ -73,7 +73,7 @@
 - **安全**：`packages/coding-agent/docs/security.md`、`SECURITY.md`、`core/trust-manager.ts`
 - **durable**：`packages/durable/README.md`、`packages/durable/docs/spec.md`
 - **codemode**：`packages/codemode/README.md`、`packages/coding-agent/docs/codemode.md`
-- **client/server**：`packages/protocol/README.md`、`packages/server/README.md`、`packages/chord/README.md`
+- **client/server**：`packages/chord/README.md`、`packages/chord/docs/guide.md`、`packages/chord/docs/spec.md`、`packages/env/docs/protocol.md`
 - **评估**：`packages/evals/README.md`、`packages/evals/evals/`
 
 ## 阅读建议

@@ -70,7 +70,7 @@ API 会返回一段文字，大概是"你可以这样修改……"，然后给�
 
 ```bash
 cd harness-book/mini-harness
-node --test test/*.test.ts         # 31 个测试，全部离线运行
+node --test test/*.test.ts         # 34 个测试，全部离线运行
 node src/main.ts --demo            # 用假模型体验交互界面，不需要 API key
 ANTHROPIC_API_KEY=... node src/main.ts   # 接真实模型
 ```

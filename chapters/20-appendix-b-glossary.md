@@ -11,14 +11,13 @@
 | agent loop | "请求模型 → 执行工具 → 再请求" 的循环 (2) |
 | AgentMessage | agent 层的消息类型，比 LLM 消息多了摘要、扩展消息等应用自定义的类型 (2) |
 | AgentSession | pi 中把 Agent、会话、压缩、扩展、重试组装在一起的类，所有运行模式共用 (4) |
-| attach | 客户端连接到服务器上的某个会话 (15) |
-| attachmentId | 服务器为每次 attach 生成的标识，请求必须携带，用于拒绝过期的请求 (15) |
+| attach | 客户端连接到服务器上的某个会话。mini-harness 示例里的概念，pi 里对应获取一个对象的引用 (15) |
+| attachmentId | mini-harness 示例里，服务器为每次 attach 生成的标识，请求必须携带，用于拒绝过期的请求 (15) |
 | backpressure (背压) | 消费者处理慢时，让生产者也慢下来，避免数据在内存里堆积 (4) |
 | bracketed paste (括号粘贴) | 终端把粘贴的内容用特殊序列包起来，程序能区分粘贴和按键 (8) |
 | branch (分支) | 会话树上从某个旧节点长出的新路径 (6) |
 | branch summary (分支摘要) | 离开一个分支时，对它的摘要，带到新分支上 (6) |
-| CBOR | 一种二进制的 JSON 类数据格式，比 JSON 紧凑 (15) |
-| chord | pi 的服务与复制状态运行时，独立于其他 pi 包 (15) |
+| chord | pi 的跨进程对象运行时：host、link、引用、复制状态、热更新，独立于其他 pi 包 (15) |
 | code mode | 让模型写 JavaScript 脚本调用工具，只有脚本输出进入上下文 (17) |
 | compaction (压缩) | 把旧的对话历史替换成摘要，释放上下文空间 (7) |
 | context (上下文) | 一次模型请求的全部输入：system prompt、历史消息、工具声明 |

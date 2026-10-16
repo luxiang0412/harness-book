@@ -92,6 +92,8 @@ const resolvedApiKey = (config.getApiKey ? await config.getApiKey(config.model.p
 
 `pi --model claude-sonnet` 支持模糊匹配：可以只写模型 id 的一部分，也可以写 `provider/id`。没有指定时，用设置里的默认模型；还没有默认模型时，选一个有凭据的 provider 的推荐模型。
 
+同一个模型 id 经常同时出现在几个 provider 里 (官方 API、OpenRouter、各种网关)。pi 先收集所有候选，再选 provider：优先有凭据的那个；有歧义时直接报出来，而不是按模型目录的顺序随便挑一个，也不会因为精确匹配有歧义就退回到模糊匹配。
+
 ### 运行中切换
 
 `/model` 打开选择器，`Ctrl+P` 在一组常用模型之间循环 (`/scoped-models` 配置这一组)。切换模型时：

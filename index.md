@@ -22,7 +22,7 @@ features:
   - title: 对照真实源码
     details: 以开源 coding agent harness pi 为蓝本，引用的源码路径和设计细节都对照仓库核实过。
   - title: 可运行的配套代码
-    details: mini-harness：约 6000 行 TypeScript，零依赖，Node 22 直接运行，31 个离线测试。
+    details: mini-harness：约 6000 行 TypeScript，零依赖，Node 22 直接运行，34 个离线测试。
   - title: 由浅入深
     details: 从统一的 LLM 接口和 agent loop，到上下文压缩、扩展系统、安全、durable 执行和评估。
 ---

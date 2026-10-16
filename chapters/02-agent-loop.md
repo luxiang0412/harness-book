@@ -332,6 +332,8 @@ arguments.path: required
 
 模型看到这个，下一轮几乎总会补上 `path` 重试。mini-harness 在 `src/agent/validate.ts` 里实现了一个够用的 JSON Schema 子集。
 
+还有一种更早的失败：参数文本本身就不是合法的 JSON，比如流在半截被截断，只收到 `{"path":"a.t`。适配器在 tool call 结束时解析失败，不能把参数悄悄当成 `{}` 交给工具 (一个所有参数都可选的工具会真的执行)。pi 的做法是在 tool call 上记一个 `argumentsError`，里面带着模型发来的原始文本；校验时看到它就直接返回错误结果，工具不执行 ([#10897](https://github.com/earendil-works/pi/issues/10897))。mini-harness 照做：`src/ai/sse.ts` 的 `parseToolArguments()` 设置这个字段，`src/agent/loop.ts` 在校验 schema 之前先检查它。
+
 pi 还有一个 `prepareArguments` 钩子，在校验前修正已知的模型怪癖。比如 edit 工具 (`packages/coding-agent/src/core/tools/edit.ts`) 里有这样的注释：
 
 ```typescript

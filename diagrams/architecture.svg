@@ -65,8 +65,8 @@
   <text x="598" y="218" class="small">pi-durable</text>
   <text x="598" y="234" class="small">崩溃可恢复的 harness (16 章)</text>
   <rect x="586" y="252" width="178" height="60" class="side"/>
-  <text x="598" y="272" class="small">protocol / server / client</text>
-  <text x="598" y="288" class="small">chord (服务与复制状态)</text>
+  <text x="598" y="272" class="small">chord</text>
+  <text x="598" y="288" class="small">跨进程对象、复制状态、热更新</text>
   <text x="598" y="304" class="small">进程拆分 (15 章)</text>
   <rect x="586" y="322" width="178" height="44" class="side"/>
   <text x="598" y="342" class="small">pi-env</text>

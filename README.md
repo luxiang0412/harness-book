@@ -27,7 +27,7 @@
 | **第四部分** | **生产级话题** | |
 | 13 | [安全与项目信任](chapters/13-security.md) | 威胁模型、隔离、项目信任、纵深防御 |
 | 14 | [模型管理、凭据与失败恢复](chapters/14-models-and-retry.md) | 模型目录、凭据、虚拟模型、错误分类、两层重试 |
-| 15 | [Client/Server：把 harness 拆成服务](chapters/15-client-server.md) | 帧协议、attach、复制状态、远程执行 |
+| 15 | [Client/Server：把 harness 拆成服务](chapters/15-client-server.md) | 合约路由、身份、复制状态、热更新、远程执行 |
 | 16 | [Durable 执行：崩溃之后接着跑](chapters/16-durable.md) | 意图日志、replay、任务、存储 |
 | 17 | [Code Mode：让模型写脚本调用工具](chapters/17-codemode.md) | 沙箱、权限不可绕过、TypeScript 声明 |
 | 18 | [测试与评估](chapters/18-testing-and-evals.md) | 假模型、时序控制、失败路径、evals |
@@ -54,7 +54,7 @@ harness-book/
 
 ```bash
 cd mini-harness
-node --test test/*.test.ts       # 31 个测试，离线运行
+node --test test/*.test.ts       # 34 个测试，离线运行
 node src/main.ts --demo          # 不需要 API key，用假模型体验交互界面
 ANTHROPIC_API_KEY=... node src/main.ts
 ```
@@ -90,7 +90,8 @@ npm run dev        # http://localhost:5173/harness-book/
 
 - pi 的源码路径都相对于 pi 仓库根目录，例如 `packages/agent/src/agent-loop.ts`。
 - 书中引用的 pi 代码有删节，以说明设计为目的；完整代码以仓库为准。
-- pi 的部分包 (durable、server、client、protocol) 标注为实验性，相关章节关注设计思路，API 可能变化。
+- pi-durable 标注为实验性，chord 在最近几个版本里整个重写过。相关章节 (15–17) 关注设计思路，API 可能变化。
+- 本书对照的 pi 版本是 v1.3.0。
 
 ## 许可证
 

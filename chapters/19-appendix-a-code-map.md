@@ -7,7 +7,7 @@
 ```bash
 cd harness-book/mini-harness
 
-node --test test/*.test.ts                 # 31 个测试，离线
+node --test test/*.test.ts                 # 34 个测试，离线
 node src/main.ts --demo                    # 交互模式，假模型
 node src/main.ts --demo -p "hello"         # print 模式
 node src/main.ts --demo --mode json "hi"   # JSON 事件流
@@ -45,19 +45,19 @@ MINI_BASE_URL=http://localhost:11434/v1 MINI_MODEL=qwen2.5-coder:7b node src/mai
 | 文件 | 行数 (含注释) | 章节 | 对应 pi |
 |---|---|---|---|
 | **ai/** | | | `packages/ai/src/` |
-| `types.ts` | 189 | 1 | `types.ts` |
+| `types.ts` | 194 | 1 | `types.ts` |
 | `event-stream.ts` | 86 | 1 | `utils/event-stream.ts` |
-| `sse.ts` | 76 | 1 | 各 API 实现内部 |
+| `sse.ts` | 85 | 1 | 各 API 实现内部 |
 | `anthropic.ts` | 246 | 1 | `api/anthropic-messages.ts` |
 | `openai.ts` | 233 | 1 | `api/openai-completions.ts` |
-| `transform.ts` | 71 | 1 | `api/transform-messages.ts` |
+| `transform.ts` | 68 | 1 | `api/transform-messages.ts` |
 | `faux.ts` | 160 | 1, 18 | `providers/faux.ts` |
 | `stream.ts` | 31 | 1 | `models.ts` 的分发部分 |
 | `models.ts` | 103 | 1, 14 | `models.ts`、`providers/*.ts`、模型目录 |
 | `errors.ts` | 47 | 7, 14 | `utils/overflow.ts`、重试判断 |
 | **agent/** | | | `packages/agent/src/` |
 | `types.ts` | 147 | 2, 4 | `types.ts` |
-| `loop.ts` | 408 | 2 | `agent-loop.ts` |
+| `loop.ts` | 411 | 2 | `agent-loop.ts` |
 | `agent.ts` | 251 | 4 | `agent.ts` |
 | `messages.ts` | 32 | 2, 7 | `coding-agent/src/core/messages.ts` |
 | `validate.ts` | 63 | 2, 3 | `ai/src/utils/validation.ts` |
@@ -75,7 +75,7 @@ MINI_BASE_URL=http://localhost:11434/v1 MINI_MODEL=qwen2.5-coder:7b node src/mai
 | `skills.ts` | 105 | 5 | `skills.ts` |
 | `prompt-templates.ts` | 53 | 5 | `prompt-templates.ts` |
 | **session/** | | | |
-| `session-manager.ts` | 321 | 6 | `session-manager.ts` |
+| `session-manager.ts` | 326 | 6 | `session-manager.ts` |
 | `agent-session.ts` | 457 | 4, 5, 7, 10, 14 | `agent-session.ts` |
 | **compaction/** | | | |
 | `compaction.ts` | 270 | 7 | `compaction/compaction.ts`、`utils.ts` |
@@ -102,7 +102,7 @@ MINI_BASE_URL=http://localhost:11434/v1 MINI_MODEL=qwen2.5-coder:7b node src/mai
 | `config.ts` | 71 | 7, 13, 14 | `config.ts`、`settings-manager.ts` |
 | `durable/recovery.ts` | 102 | 16 | `packages/durable` (只演示核心规则) |
 | `codemode/codemode.ts` | 119 | 17 | `packages/codemode`、`extensions/codemode/` |
-| `main.ts` | 202 | 9 | `main.ts` |
+| `main.ts` | 203 | 9 | `main.ts` |
 
 ## 示例
 

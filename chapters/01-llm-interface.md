@@ -115,7 +115,7 @@ interface ToolResultMessage {
 
 **工具参数是对象，不是字符串。** OpenAI 返回的是 JSON 字符串，适配器负责解析。上层拿到的永远是对象。
 
-**assistant 消息记录了"是谁生成的"。** `api`、`provider`、`model` 三个字段看起来冗余，但切换模型时非常关键。例如 thinking 块带有一个签名 (`thinkingSignature`)，它只对生成它的那个模型有效。下次请求时，适配器要判断"这条历史消息是不是当前模型生成的"，决定原样回放还是转成普通文本。1.6 节会讲到。
+**assistant 消息记录了"是谁生成的"。** `api`、`provider`、`model` 三个字段看起来冗余，但切换模型时非常关键。例如 thinking 块带有一个签名 (`thinkingSignature`)，它只对生成它的那个模型有效。下次请求时，适配器要判断"这条历史消息是不是当前模型生成的"，决定原样回放还是丢弃。1.6 节会讲到。
 
 **`stopReason` 统一了停止原因。** 各家的叫法不同 (`end_turn`、`stop`、`tool_use`、`tool_calls`、`max_tokens`、`length`……)，统一成下面五种 (pi 另外还有表示流式进行中的 `pending` 和表示异步请求已提交的 `deferred`，本书不涉及)：
 
@@ -401,9 +401,11 @@ user:      "算了，换个问题"          ← id=2 没有结果
 
 **问题 2：失败的 assistant 消息。** 一条因网络中断而失败的消息可能只有半截内容，比如有 thinking 没有正文，或者 tool call 参数只生成了一半。直接丢弃，让模型从上一个完整状态重新开始。
 
-**问题 3：跨模型的 thinking。** 用 Claude 跑了几轮后切换到 GPT。历史里 Claude 的 thinking 块带着 Anthropic 的签名，OpenAI 不认识，Anthropic 也不接受别的模型伪造的签名。处理方式：如果消息不是当前模型生成的，把 thinking 转成普通文本。
+**问题 3：跨模型的 thinking。** 用 Claude 跑了几轮后切换到 GPT。历史里 Claude 的 thinking 块带着 Anthropic 的签名，OpenAI 不认识，Anthropic 也不接受别的模型伪造的签名。处理方式：如果消息不是当前模型生成的，丢弃它的 thinking 块。
 
-mini-harness 的实现 (`src/ai/transform.ts`) 只有 70 行，值得完整读一遍。它的测试在 `test/providers.test.ts` 的 "orphaned tool calls get a synthetic result before sending"。
+为什么不转成普通文本？pi 早期就是这么做的，结果新模型把旧模型的推理当成了"自己说过的话"，开始在可见的回答里写推理过程 ([#10995](https://github.com/earendil-works/pi/issues/10995))。推理只对产生它的模型有意义，换了模型就不要了。
+
+mini-harness 的实现 (`src/ai/transform.ts`) 不到 70 行，值得完整读一遍。它的测试在 `test/providers.test.ts` 的 "orphaned tool calls get a synthetic result before sending"。
 
 ## 1.7 prompt cache：一个必须早点知道的概念
 
@@ -501,7 +503,7 @@ MINI_BASE_URL=http://localhost:11434/v1 MINI_MODEL=qwen2.5-coder:7b node example
 |---|---|---|
 | `src/ai/types.ts` | ~200 | `packages/ai/src/types.ts` |
 | `src/ai/event-stream.ts` | ~90 | `packages/ai/src/utils/event-stream.ts` |
-| `src/ai/sse.ts` | ~80 | 各适配器内部的 SSE 解析 |
+| `src/ai/sse.ts` | ~85 | 各适配器内部的 SSE 解析 |
 | `src/ai/anthropic.ts` | ~250 | `packages/ai/src/api/anthropic-messages.ts` (1600 行) |
 | `src/ai/openai.ts` | ~240 | `packages/ai/src/api/openai-completions.ts` (1700 行) |
 | `src/ai/transform.ts` | ~70 | `packages/ai/src/api/transform-messages.ts` |

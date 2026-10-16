@@ -124,20 +124,66 @@ pi-durable 支持几种存储后端：
 | JSONL | 一个目录下的追加文件，可选每次提交前 fsync |
 | Cloudflare Durable Object | 运行在 Cloudflare 上的 SQLite |
 
+SQLite 后端可以给所有表和索引加一个前缀 (`{ prefix }`)，和宿主自己的表共用一个数据库文件。
+
 所有后端共享一套**一致性测试** (`registerStorageConformance`)。实现一个新的后端，跑通这套测试，就能确信它满足 harness 的要求。这是给可替换组件定义契约的好方法。
 
 注意 SQLite 一行里的细节：WAL + `synchronous = NORMAL` 意味着进程崩溃是安全的，但操作系统崩溃或断电时，最后一次提交可能丢失。持久化有不同的强度，文档里明确写出保证到哪一级，使用者才能做出正确的选择。
 
-## 16.6 其他能力
+## 16.6 工具调用工具
+
+code mode 脚本 (第 17 章)、MCP 桥接这类工具，要在执行过程中调用别的工具。在 durable harness 里，这带来一个新问题：外层工具崩溃后重跑，里面已经完成的调用怎么办？
+
+pi-durable 的做法是让嵌套调用也成为任务：
+
+```typescript
+const testsPass = defineTool({
+  name: "tests_pass",
+  parameters: Type.Object({}),
+  execute: async (_args, api, context) => {
+    const run = await api.executeTool("bash", { command: "npm test" }, context, { progress: false });
+    const exitCode = (run.structuredOutput as { exitCode: number } | undefined)?.exitCode;
+    return { output: [{ type: "text", text: exitCode === 0 ? "passed" : "failed" }] };
+  },
+});
+```
+
+- **嵌套调用是外层任务拥有的子任务。** 它走和模型发出的调用相同的路径：参数校验、`beforeTool` 等钩子、输出上限、自己的 `replay` 策略。权限检查不会因为"是工具调用的"就被跳过。钩子能看到 `call.parent`，可以对脚本发出的调用区别对待。
+- **每个嵌套调用有一个 key。** 默认是它在外层调用里的序号，也可以显式传 `{ key }`。一个 `replay: "safe"` 的外层工具崩溃后重跑，只要按同样的顺序调用 (或者用同样的 key)，拿回的就是上次已经发出的那些嵌套调用，而不是新建一批：结果已经提交的直接给结果，不会再执行；还在跑的接着等。崩溃时还没提交结果的嵌套调用，按它**自己的** `replay` 策略处理：可能重跑，也可能得到 `interrupted`。所以一个声明了 `replay: "safe"`、又有外部副作用的工具，仍然要自己保证幂等。
+- **不能重跑的外层工具，崩溃后它的嵌套调用会被放弃。** 外层不会再运行，没人会来取这些结果。它们连同自己拥有的任务一起被中止，然后才会有新的工作开始。
+
+工具的结果因此分成三个通道：`output` 给模型看，`structuredOutput` 给调用它的程序 (可以声明 `structuredOutputSchema`，由 harness 校验)，`details` 给 UI。比如 pi-durable 内置的 bash 遇到非零退出码时返回一个错误结果，但 `structuredOutput` 里仍然带着 `exitCode`，脚本可以自己判断。(注意命名：pi-durable 的 bash 用 `exitCode`；第 17 章 coding-agent 的 codemode 里，bash 返回的是 `exit_code`。这是两个包各自的工具，不是同一个 API。)
+
+### 谁可以调用一个工具
+
+工具多了以后，"模型能看到哪些"和"程序能调用哪些"需要分开：
+
+- `callers: ["model"]` 只允许模型调用 (比如 codemode 自己：脚本不能再启动脚本)；`callers: ["tools"]` 只允许其他工具调用，永远不声明给模型；默认两者都可以。
+- 会话的 `modelTools` 进一步收窄"声明给模型的工具"，但不影响工具之间的调用。比如只把 codemode 声明给模型，其余工具都只能在脚本里调用。
+- `deferred: true` 的工具在被加载之前不声明给模型。`tool_search` 工具让模型搜索这些工具，搜到后写进 `modelTools`，之后在这个分支上一直声明，压缩后也是。这就是第 12 章 MCP `deferred` exposure 在 durable 里的对应物。
+
+## 16.7 错误：谁失败，失败到哪里
+
+一个长期运行的 harness 要明确：什么错误让整个 harness 停下，什么错误只影响一个任务。pi-durable 的 README 写了三条规则：
+
+1. **存储错误结束整个 Harness。** 遇到错误的那次调用失败，之后的所有调用、所有等待都以 `SessionFailed` 失败，Harness 自己关闭，不重试。瞬时故障由存储实现自己重试，传到 harness 这一层的错误就当作存储不可用。因为提交是原子的，存储里的状态是一致的，重新打开就能恢复；客户端用同一个 `requestId` 重新提交，找到的是已经接受的那个提交。
+2. **无效的请求只让那次调用失败。** 比如一个不存在的会话、一个错误的游标。
+3. **你的代码只让它自己的单元失败。** 任务的某一步抛错，这个任务出错；工具抛错，模型得到一个错误结果；钩子抛错，报告后跳过 (`beforeTool` 抛错则拦下这次调用)；提交回调抛错，这次提交回滚。有一个例外：宿主提供的 `RegistryReader` 的 `snapshot()` 抛错，Harness 就没法调度任何任务，所以它和存储错误一样让整个 Harness 失败。
+
+宿主可以监听 `harness.closed`，在失败时重新打开存储。
+
+## 16.8 其他能力
 
 README 里还有几个值得了解的设计：
 
 - **视图 (view)**：UI 需要的一切都是已提交的状态。`viewState()` 返回一个 chord 复制状态 (第 15 章)，包括对话记录、正在运行的生成和工具 (`pi.live`)、收件箱 (`pi.inbox`)、用量 (`pi.usage`)。远程客户端订阅它，就能实时看到 agent 在做什么。
 - **收件箱**：会话繁忙时提交的输入进入收件箱。和第 4 章一样分 steer 和 follow-up，另外还有 `reject` (繁忙时直接拒绝) 和 `write` (只追加一条记录，不触发模型)。
 - **子 agent**：一个工具可以创建一个**被任务拥有**的子会话。工具任务被中止时，子会话也被中止。因为子会话的创建和工具的意图在同一个提交里，崩溃后重跑这个工具 (`replay: "safe"`) 能找回同一个子会话，而不是再创建一个。
+- **durable code mode**：`@earendil-works/pi-durable/codemode` 提供的 codemode 工具，脚本在重启后能从中断的地方继续，不会把已经完成的工具调用再执行一遍。做法见第 17 章。
+- **重启时放弃的任务**：有些任务只有创建者在内存里等它，重启后没人会再来取结果。用 `abandonOnRestart: true` 创建，新进程开始调度时先把它们 (连同它们拥有的任务) 中止掉，而不是白白跑完。
 - **reset 和 handoff**：`reset()` 开始一个新的上下文，旧的记录仍然保存。可以带一段交接说明 ("我们在修复登录测试，继续")，这是一种比压缩更粗粒度的上下文管理。
 
-## 16.7 mini-harness 的演示
+## 16.9 mini-harness 的演示
 
 mini-harness 没有实现完整的 durable 架构，`src/durable/recovery.ts` 只演示 16.3 节的核心规则：
 
@@ -173,7 +219,7 @@ export async function recoverInterruptedToolCalls(session, tools): Promise<Recov
 
 测试 "durable: interrupted tool calls are rerun only when safe" 模拟了崩溃：`send_email` 登记了意图但没有结果，`lookup` (声明了 `replay: "safe"`) 从未开始。恢复后，`lookup` 被执行，`send_email` 得到 interrupted 错误，邮件没有发两次。
 
-## 16.8 和 mini-harness 架构的差距
+## 16.10 和 mini-harness 架构的差距
 
 mini-harness (以及 pi 的 coding-agent) 的会话文件只记录完成的消息，而 pi-durable 记录的是**完整的状态机**。差距在这些地方：
 

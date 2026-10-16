@@ -128,11 +128,12 @@ pi 先把对话序列化成纯文本，包在 `<conversation>` 标签里，作�
 ```typescript
 // packages/coding-agent/src/core/compaction/utils.ts，serializeConversation()
 [User]: 修复所有失败的测试
-[Assistant thinking]: 先运行测试看看哪些失败了
 [Assistant tool calls]: bash(command="npm test")
 [Tool result]: FAIL src/date.test.ts ...
 [Assistant]: date.test.ts 有 3 个失败...
 ```
+
+序列化时**不带 thinking 块**。会话历史里存着每一轮的 thinking，但它们常常不在模型当前的上下文里 (比如换了模型以后，旧的 thinking 会被丢弃，见第 1 章)。如果把它们全部写进摘要请求，请求可能比它要摘要的上下文还大，每次都以 "prompt is too long" 失败。
 
 再配一个专门的 system prompt：
 

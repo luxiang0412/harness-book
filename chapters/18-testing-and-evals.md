@@ -191,7 +191,7 @@ cd harness-book/mini-harness
 node --test test/*.test.ts
 ```
 
-31 个测试，全部离线运行，几秒钟完成：
+34 个测试，全部离线运行，几秒钟完成：
 
 | 文件 | 覆盖 |
 |---|---|
